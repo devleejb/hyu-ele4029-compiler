@@ -98,6 +98,8 @@ TokenType getToken(void)
            state = INEQ;
          else if (c == '<')
            state = INLT;
+         else if (c == '>')
+           state = INGT;
          else if (c == '{')
          { save = FALSE;
            state = INCOMMENT;
@@ -185,6 +187,18 @@ TokenType getToken(void)
           save = FALSE;
           state = DONE;
           currentToken = LT;
+        }
+       case INGT:
+        if (c == '=')
+        { state = DONE;
+          currentToken = GE;
+        }
+        else
+        { /* backup in the input */
+          ungetNextChar();
+          save = FALSE;
+          state = DONE;
+          currentToken = GT;
         }
        case DONE:
        default: /* should never happen */
