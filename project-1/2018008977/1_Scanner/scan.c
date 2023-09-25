@@ -92,8 +92,6 @@ TokenType getToken(void)
            state = INNUM;
          else if (isalpha(c))
            state = INID;
-         else if (c == ':')
-           state = INASSIGN;
          else if ((c == ' ') || (c == '\t') || (c == '\n'))
            save = FALSE;
          else if (c == '{')
@@ -108,7 +106,7 @@ TokenType getToken(void)
                currentToken = ENDFILE;
                break;
              case '=':
-               currentToken = EQ;
+               currentToken = ASSIGN;
                break;
              case '<':
                currentToken = LT;
@@ -147,17 +145,6 @@ TokenType getToken(void)
            currentToken = ENDFILE;
          }
          else if (c == '}') state = START;
-         break;
-       case INASSIGN:
-         state = DONE;
-         if (c == '=')
-           currentToken = ASSIGN;
-         else
-         { /* backup in the input */
-           ungetNextChar();
-           save = FALSE;
-           currentToken = ERROR;
-         }
          break;
        case INNUM:
          if (!isdigit(c))
