@@ -11,7 +11,7 @@
 
 /* states in scanner DFA */
 typedef enum
-   { START,INASSIGN,INCOMMENT,INNUM,INID,DONE }
+   { START,INCOMMENT,INNUM,INID,DONE,INEQ,INLT,INGT,INOVER,INCOMMENT,INCOMMENT_ }
    StateType;
 
 /* lexeme of identifier or reserved word */
