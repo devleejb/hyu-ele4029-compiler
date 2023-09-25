@@ -102,10 +102,11 @@ TokenType getToken(void)
            state = INGT;
          else if (c == '!')
            state = INNE;
-         else if (c == '{')
-         { save = FALSE;
-           state = INCOMMENT;
-         }
+         else if (c == '/')
+          {
+           save = FALSE;
+           state = INOVER;
+          }
          else
          { state = DONE;
            switch (c)
@@ -121,9 +122,6 @@ TokenType getToken(void)
                break;
              case '*':
                currentToken = TIMES;
-               break;
-             case '/':
-               currentToken = OVER;
                break;
              case '(':
                currentToken = LPAREN;
@@ -154,14 +152,6 @@ TokenType getToken(void)
                break;
            }
          }
-         break;
-       case INCOMMENT:
-         save = FALSE;
-         if (c == EOF)
-         { state = DONE;
-           currentToken = ENDFILE;
-         }
-         else if (c == '}') state = START;
          break;
        case INNUM:
          if (!isdigit(c))
@@ -232,6 +222,38 @@ TokenType getToken(void)
           state = DONE;
           currentToken = ERROR;
         }
+        break;
+       case INOVER:
+        if (c == '*')
+        { state = INCOMMENT;
+          save = FALSE;
+        }
+        else
+        { /* backup in the input */
+          ungetNextChar();
+          c = '/';
+          state = DONE;
+          currentToken = OVER;
+        }
+       case INCOMMENT:
+        save = FALSE;
+        if (c == '*')
+         state = INCOMMENT_;
+        else if (c == EOF)
+        { state = DONE;
+          currentToken = ENDFILE;
+        }
+        break;
+       case INCOMMENT_:
+        save = FALSE;
+        if (c == '/')
+         state = START;
+        else if (c == EOF)
+        { state = DONE;
+          currentToken = ENDFILE;
+        }
+        else
+         state = INCOMMENT;
         break;
        case DONE:
        default: /* should never happen */
