@@ -11,7 +11,7 @@
 
 /* states in scanner DFA */
 typedef enum
-   { START,INCOMMENT,INNUM,INID,DONE,INEQ,INLT,INGT,INOVER,INCOMMENT,INCOMMENT_ }
+   { START,INCOMMENT,INNUM,INID,DONE,INEQ,INLT,INGT,INNE,INOVER,INCOMMENT,INCOMMENT_ }
    StateType;
 
 /* lexeme of identifier or reserved word */
@@ -100,6 +100,8 @@ TokenType getToken(void)
            state = INLT;
          else if (c == '>')
            state = INGT;
+         else if (c == '!')
+           state = INNE;
          else if (c == '{')
          { save = FALSE;
            state = INCOMMENT;
@@ -129,8 +131,23 @@ TokenType getToken(void)
              case ')':
                currentToken = RPAREN;
                break;
+             case '[':
+               currentToken = LBRACE;
+               break;
+             case ']':
+               currentToken = RBRACE;
+               break;
+             case '{':
+               currentToken = LCURLY;
+               break;
+             case '}':
+               currentToken = RCURLY;
+               break;
              case ';':
                currentToken = SEMI;
+               break;
+             case ',':
+               currentToken = COMMA;
                break;
              default:
                currentToken = ERROR;
@@ -154,7 +171,7 @@ TokenType getToken(void)
            state = DONE;
            currentToken = NUM;
          }
-         break;
+         break;        
        case INID:
          if (!isalpha(c))
          { /* backup in the input */
@@ -176,6 +193,7 @@ TokenType getToken(void)
            state = DONE;
            currentToken = ASSIGN;
          } 
+         break;
        case INLT:
         if (c == '=')
         { state = DONE;
@@ -188,6 +206,7 @@ TokenType getToken(void)
           state = DONE;
           currentToken = LT;
         }
+        break;
        case INGT:
         if (c == '=')
         { state = DONE;
@@ -200,6 +219,20 @@ TokenType getToken(void)
           state = DONE;
           currentToken = GT;
         }
+        break;
+       case INNE:
+        if (c == '=')
+        { state = DONE;
+          currentToken = NE;
+        }
+        else
+        { /* backup in the input */
+          ungetNextChar();
+          save = FALSE;
+          state = DONE;
+          currentToken = ERROR;
+        }
+        break;
        case DONE:
        default: /* should never happen */
          fprintf(listing,"Scanner Bug: state= %d\n",state);
