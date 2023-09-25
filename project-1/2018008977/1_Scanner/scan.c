@@ -11,7 +11,7 @@
 
 /* states in scanner DFA */
 typedef enum
-   { START,INCOMMENT,INNUM,INID,DONE,INEQ,INLT,INGT,INNE,INOVER,INCOMMENT,INCOMMENT_ }
+   { START,INCOMMENT,INNUM,INID,DONE,INEQ,INLT,INGT,INNE,INOVER,INCOMMENT_ }
    StateType;
 
 /* lexeme of identifier or reserved word */
@@ -163,7 +163,7 @@ TokenType getToken(void)
          }
          break;        
        case INID:
-         if (!isalpha(c) || !isdigit(c))
+         if (!isalpha(c) && !isdigit(c))
          { /* backup in the input */
            ungetNextChar();
            save = FALSE;
