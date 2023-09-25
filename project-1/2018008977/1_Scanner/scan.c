@@ -96,6 +96,8 @@ TokenType getToken(void)
            save = FALSE;
          else if (c == '=')
            state = INEQ;
+         else if (c == '<')
+           state = INLT;
          else if (c == '{')
          { save = FALSE;
            state = INCOMMENT;
@@ -106,9 +108,6 @@ TokenType getToken(void)
            { case EOF:
                save = FALSE;
                currentToken = ENDFILE;
-               break;
-             case '<':
-               currentToken = LT;
                break;
              case '+':
                currentToken = PLUS;
@@ -163,6 +162,30 @@ TokenType getToken(void)
            currentToken = ID;
          }
          break;
+       case INEQ:
+         if (c == '=')
+         { state = DONE;
+           currentToken = EQ;
+         }
+         else
+         { /* backup in the input */
+           ungetNextChar();
+           save = FALSE;
+           state = DONE;
+           currentToken = ASSIGN;
+         } 
+       case INLT:
+        if (c == '=')
+        { state = DONE;
+          currentToken = LE;
+        }
+        else
+        { /* backup in the input */
+          ungetNextChar();
+          save = FALSE;
+          state = DONE;
+          currentToken = LT;
+        }
        case DONE:
        default: /* should never happen */
          fprintf(listing,"Scanner Bug: state= %d\n",state);
