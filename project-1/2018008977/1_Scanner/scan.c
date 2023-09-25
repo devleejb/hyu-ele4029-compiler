@@ -94,6 +94,8 @@ TokenType getToken(void)
            state = INID;
          else if ((c == ' ') || (c == '\t') || (c == '\n'))
            save = FALSE;
+         else if (c == '=')
+           state = INEQ;
          else if (c == '{')
          { save = FALSE;
            state = INCOMMENT;
@@ -104,9 +106,6 @@ TokenType getToken(void)
            { case EOF:
                save = FALSE;
                currentToken = ENDFILE;
-               break;
-             case '=':
-               currentToken = ASSIGN;
                break;
              case '<':
                currentToken = LT;
