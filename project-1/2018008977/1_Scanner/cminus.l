@@ -16,40 +16,51 @@ char tokenString[MAXTOKENLEN+1];
 digit       [0-9]
 number      {digit}+
 letter      [a-zA-Z]
-identifier  {letter}+
+identifier  {letter}({letter}|{digit})*
 newline     \n
 whitespace  [ \t]+
 
 %%
 
+"int"           {return INT;}
+"void"          {return VOID;}
 "if"            {return IF;}
-"then"          {return THEN;}
 "else"          {return ELSE;}
-"end"           {return END;}
-"repeat"        {return REPEAT;}
-"until"         {return UNTIL;}
-"read"          {return READ;}
-"write"         {return WRITE;}
-":="            {return ASSIGN;}
-"="             {return EQ;}
-"<"             {return LT;}
+"while"         {return WHILE;}
+"return"        {return RETURN;}
 "+"             {return PLUS;}
 "-"             {return MINUS;}
 "*"             {return TIMES;}
 "/"             {return OVER;}
+"<"             {return LT;}
+"<="            {return LE;}
+">"             {return GT;}
+">="            {return GE;}
+"=="            {return EQ;}
+"!="            {return NE;}
+"="             {return ASSIGN;}
+";"             {return SEMI;}
+","             {return COMMA;}
 "("             {return LPAREN;}
 ")"             {return RPAREN;}
-";"             {return SEMI;}
+"["             {return LBRACE;}
+"]"             {return RBRACE;}
+"{"             {return LCURLY;}
+"}"             {return RCURLY;}
 {number}        {return NUM;}
 {identifier}    {return ID;}
 {newline}       {lineno++;}
 {whitespace}    {/* skip whitespace */}
-"{"             { char c;
+"/*"            { char c;
+                  int state = 0;
                   do
                   { c = input();
                     if (c == EOF) break;
                     if (c == '\n') lineno++;
-                  } while (c != '}');
+                    if (c == '*') state = 1;
+                    else if (c == '/' && state == 1) break;
+                    else state = 0;
+                  } while (1);
                 }
 .               {return ERROR;}
 
