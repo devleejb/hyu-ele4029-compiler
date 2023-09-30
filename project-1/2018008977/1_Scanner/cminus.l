@@ -55,7 +55,7 @@ whitespace  [ \t]+
                   int state = 0;
                   do
                   { c = input();
-                    if (c == EOF) break;
+                    if (c == EOF || c == '\0') break;
                     if (c == '\n') lineno++;
                     if (c == '*') state = 1;
                     else if (c == '/' && state == 1) break;
