@@ -163,6 +163,7 @@ TokenType getToken(void)
          }
          break;        
        case INID:
+         /* identifier includes letters and digits */
          if (!isalpha(c) && !isdigit(c))
          { /* backup in the input */
            ungetNextChar();
@@ -173,11 +174,14 @@ TokenType getToken(void)
          break;
        case INEQ:
          if (c == '=')
-         { state = DONE;
+         { 
+           /* Case: == */ 
+           state = DONE;
            currentToken = EQ;
          }
          else
-         { /* backup in the input */
+         { /* Case: = */
+           /* backup in the input */
            ungetNextChar();
            save = FALSE;
            state = DONE;
@@ -186,11 +190,13 @@ TokenType getToken(void)
          break;
        case INLT:
         if (c == '=')
-        { state = DONE;
+        { /* Case: <= */
+          state = DONE;
           currentToken = LE;
         }
         else
-        { /* backup in the input */
+        { /* Case: < */
+          /* backup in the input */
           ungetNextChar();
           save = FALSE;
           state = DONE;
@@ -199,11 +205,13 @@ TokenType getToken(void)
         break;
        case INGT:
         if (c == '=')
-        { state = DONE;
+        { /* Case: >= */
+          state = DONE;
           currentToken = GE;
         }
         else
-        { /* backup in the input */
+        { /* Case: > */
+          /* backup in the input */
           ungetNextChar();
           save = FALSE;
           state = DONE;
@@ -212,11 +220,13 @@ TokenType getToken(void)
         break;
        case INNE:
         if (c == '=')
-        { state = DONE;
+        { /* Case: != */
+          state = DONE;
           currentToken = NE;
         }
         else
-        { /* backup in the input */
+        { /* Case: All characters except '=' behind of '!' */
+          /* backup in the input */
           ungetNextChar();
           save = FALSE;
           state = DONE;
@@ -225,19 +235,22 @@ TokenType getToken(void)
         break;
        case INOVER:
         if (c == '*')
-        { state = INCOMMENT;
+        { /* Case: /* */
+          state = INCOMMENT;
           save = FALSE;
         }
         else
-        { /* backup in the input */
+        { /* Case: / */
+          /* backup in the input */
           ungetNextChar();
-          c = '/';
+          save = FALSE;
           state = DONE;
           currentToken = OVER;
         }
        case INCOMMENT:
         save = FALSE;
         if (c == '*')
+         /* Case: Start Comment */
          state = INCOMMENT_;
         else if (c == EOF)
         { state = DONE;
@@ -247,6 +260,7 @@ TokenType getToken(void)
        case INCOMMENT_:
         save = FALSE;
         if (c == '/')
+         /* Case: End Comment */
          state = START;
         else if (c == EOF)
         { state = DONE;
