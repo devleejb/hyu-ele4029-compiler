@@ -55,10 +55,10 @@ whitespace  [ \t]+
                   int state = 0;
                   do
                   { c = input();
-                    if (c == EOF || c == '\0') break;
-                    if (c == '\n') lineno++;
-                    if (c == '*') state = 1;
-                    else if (c == '/' && state == 1) break;
+                    if (c == EOF || c == '\0') break;             /* End file without closing comment */
+                    if (c == '\n') lineno++;                      /* New Line */
+                    if (c == '*') state = 1;          
+                    else if (c == '/' && state == 1) break;       /* Close Comment */
                     else state = 0;
                   } while (1);
                 }
