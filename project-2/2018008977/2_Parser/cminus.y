@@ -113,13 +113,19 @@ param               : type_specifier identifier
                                    $$->lineno = $2->lineno;
                                    $$->type = $1->type;
                                    $$->name = $2->name;
+                                   free($1);
+                                   free($2);
                          }
                     | type_specifier identifier LBRACE RBRACE
                          { 
                                    $$ = newTreeNode(Params);
                                    $$->lineno = $2->lineno;
-                                   $$->type = $1->type;
+                                   if ($1->type == Integer) $$->type = IntegerArray;
+							else if ($1->type == Void) $$->type = VoidArray;
+							else $$->type = None;
                                    $$->name = $2->name;
+                                   free($1);
+                                   free($2);
                          }
                     ;
 compound_stmt       : LCURLY local_declarations statement_list RCURLY
