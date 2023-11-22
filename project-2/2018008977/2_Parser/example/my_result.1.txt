@@ -6,7 +6,7 @@ Syntax tree:
     Parameter: name = u, type = int
     Parameter: name = v, type = int
     Compound Statement:
-      If Statement:
+      If-Else Statement:
         Op: ==
           Variable: name = v
           Const: 0

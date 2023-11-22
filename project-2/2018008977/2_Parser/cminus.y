@@ -166,6 +166,7 @@ selection_stmt		: IF LPAREN expression RPAREN statement ELSE statement
                          {
                                    $$ = newTreeNode(IfStmt);
                                    $$->lineno = lineno;
+                                   $$->flag = TRUE;
                                    $$->child[0] = $3; 
                                    $$->child[1] = $5; 
                                    $$->child[2] = $7; 
