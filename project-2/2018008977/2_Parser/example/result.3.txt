@@ -1,0 +1,38 @@
+
+C-MINUS COMPILATION: ./example/test.3.txt
+
+Syntax tree:
+  Function Declaration: name = main, return type = void
+    Void Parameter
+    Compound Statement:
+      If Statement:
+        Op: <
+          Variable: name = a
+          Const: 0
+        If-Else Statement:
+          Op: >
+            Variable: name = a
+            Const: 3
+          Assign:
+            Variable: name = a
+            Const: 3
+          Assign:
+            Variable: name = a
+            Const: 4
+  Function Declaration: name = main2, return type = void
+    Void Parameter
+    Compound Statement:
+      If Statement:
+        Op: <
+          Variable: name = a
+          Const: 0
+        If-Else Statement:
+          Op: >
+            Variable: name = a
+            Const: 3
+          Assign:
+            Variable: name = a
+            Const: 3
+          Assign:
+            Variable: name = a
+            Const: 4
