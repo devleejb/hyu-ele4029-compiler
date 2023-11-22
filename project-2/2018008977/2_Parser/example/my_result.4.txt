@@ -1,0 +1,10 @@
+
+C-MINUS COMPILATION: ./example/test.4.txt
+
+Syntax tree:
+  Function Declaration: name = main, return type = void
+    Void Parameter
+    Compound Statement:
+      Variable Declaration: name = a, type = int
+      Variable Declaration: name = b, type = int
+      Return Statement:
