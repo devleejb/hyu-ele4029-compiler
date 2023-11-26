@@ -7,4 +7,4 @@ Syntax tree:
     Compound Statement:
       Variable Declaration: name = a, type = int
       Variable Declaration: name = b, type = int
-      Return Statement:
+      Non-value Return Statement

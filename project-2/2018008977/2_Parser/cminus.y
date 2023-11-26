@@ -200,6 +200,7 @@ return_stmt         : RETURN SEMI
                          { 
                                    $$ = newTreeNode(ReturnStmt);
                                    $$->lineno = lineno;
+                                   $$->flag = TRUE;
                          }
                     | RETURN expression SEMI
                          { 
