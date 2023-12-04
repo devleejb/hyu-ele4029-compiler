@@ -183,15 +183,17 @@ static void insertNode(TreeNode *t)
 			// Semantic Error: Void-Type Parameters
 			// Semantic Error: Redefined Variables
 			// Insert New Variable Symbol to Symbol Table
-			/*********************Fill the Code*************************
-			 *                                                         *
-			 *                                                         *
-			 *                                                         *
-			 *                                                         *
-			 *                                                         *
-			************************************************************/
+			if (t->type == Void || t->type == VoidArray)
+			{
+				VoidTypeVariableError(t->name, t->lineno);
+				break;
+			}
+
+			SymbolRec *symbol = lookupSymbolInCurrentScope(currentScope, t->name);
+			if (symbol != NULL) RedefinitionError(t->name, t->lineno, symbol);
 			
-			// Break
+			insertSymbol(currentScope, t->name, t->type, VariableSym, t->lineno, t);
+			
 			break;
 		}
 		// Compound Statements
