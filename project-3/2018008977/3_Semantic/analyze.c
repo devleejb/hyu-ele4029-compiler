@@ -326,7 +326,11 @@ static void checkNode(TreeNode *t)
 			// Error Check
 			ERROR_CHECK(currentScope->func != NULL);
 			// Semantic Error: Invalid Return
-			if (t->child[0] != NULL && t->child[0]->type != currentScope->func->type) InvalidReturnError(t->lineno);
+			if (
+				(t->child[0] != NULL && t->child[0]->type != currentScope->func->type)
+				||
+				(t->child[0] == NULL && currentScope->func->type != Void)
+			) InvalidReturnError(t->lineno);
 			// Break
 			break;
 		}
@@ -364,6 +368,13 @@ static void checkNode(TreeNode *t)
 			TreeNode *paramNode = calleeSymbol->node->child[0];
 			TreeNode *argNode = t->child[0];
 
+			if (paramNode->type == Void) 
+			{
+				paramNode = NULL;
+				if (argNode != NULL && argNode->type == Void) 
+					argNode = NULL;
+			}
+
 			while (paramNode != NULL && argNode != NULL)
 			{
 				if (paramNode->type != argNode->type) 
@@ -372,6 +383,9 @@ static void checkNode(TreeNode *t)
 				paramNode = paramNode->sibling;
 				argNode = argNode->sibling;
 			}
+
+			if (paramNode != NULL || argNode != NULL) 
+				InvalidFunctionCallError(t->name, t->lineno);
 			
 			// Update Node Type
 			t->type = calleeSymbol->type;
@@ -393,8 +407,8 @@ static void checkNode(TreeNode *t)
 			// Array Access or Not
 			if (t->child[0] != NULL)
 			{
-				// Semantic Error: Index to Not Array				
-				if (t->type != IntegerArray)
+				// Semantic Error: Index to Not Array	
+				if (symbol->type != IntegerArray)
 					ArrayIndexingError2(t->name, t->lineno);
 
 				// Semantic Error: Index is not Integer in Array Indexing
