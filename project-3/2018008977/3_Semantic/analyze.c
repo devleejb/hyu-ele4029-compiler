@@ -314,13 +314,8 @@ static void checkNode(TreeNode *t)
 			// Error Check
 			ERROR_CHECK(t->child[0] != NULL);
 			// Semantic Error: Invalid Condition in If/If-Else, While Statement
-			/*********************Fill the Code*************************
-			 *                                                         *
-			 *                                                         *
-			 *                                                         *
-			 *                                                         *
-			 *                                                         *
-			************************************************************/
+			if (t->child[0] == NULL || t->child[0]->type != Integer) 
+				InvalidConditionError(t->lineno);
 			
 			// Break
 			break;
@@ -331,13 +326,7 @@ static void checkNode(TreeNode *t)
 			// Error Check
 			ERROR_CHECK(currentScope->func != NULL);
 			// Semantic Error: Invalid Return
-			/*********************Fill the Code*************************
-			 *                                                         *
-			 *                                                         *
-			 *                                                         *
-			 *                                                         *
-			 *                                                         *
-			************************************************************/
+			if (t->child[0] != NULL && t->child[0]->type != currentScope->func->type) InvalidReturnError(t->lineno);
 			// Break
 			break;
 		}
@@ -348,13 +337,11 @@ static void checkNode(TreeNode *t)
 			// Error Check
 			ERROR_CHECK(t->child[0] != NULL && t->child[1] != NULL);
 			// Semantic Error: Invalid Assignment / Operation
-			/*********************Fill the Code*************************
-			 *                                                         *
-			 *                                                         *
-			 *                                                         *
-			 *                                                         *
-			 *                                                         *
-			************************************************************/
+			if (t->child[0] == NULL || t->child[1] == NULL || t->child[0]->type != t->child[1]->type)
+				if (t->kind == AssignExpr)
+					InvalidAssignmentError(t->lineno);
+				else
+					InvalidOperationError(t->lineno);
 			// Update Node Type
 			t->type = t->child[0]->type;
 			// Break
@@ -372,16 +359,20 @@ static void checkNode(TreeNode *t)
 				t->type = calleeSymbol->type;
 				break;
 			}
+
 			// Semantic Error: Invalid Arguments
 			TreeNode *paramNode = calleeSymbol->node->child[0];
 			TreeNode *argNode = t->child[0];
-			/*********************Fill the Code*************************
-			 *                                                         *
-			 *                                                         *
-			 *                                                         *
-			 *                                                         *
-			 *                                                         *
-			************************************************************/
+
+			while (paramNode != NULL && argNode != NULL)
+			{
+				if (paramNode->type != argNode->type) 
+					InvalidFunctionCallError(t->name, t->lineno);
+
+				paramNode = paramNode->sibling;
+				argNode = argNode->sibling;
+			}
+			
 			// Update Node Type
 			t->type = calleeSymbol->type;
 			// Break
@@ -403,14 +394,13 @@ static void checkNode(TreeNode *t)
 			if (t->child[0] != NULL)
 			{
 				// Semantic Error: Index to Not Array				
+				if (t->type != IntegerArray)
+					ArrayIndexingError2(t->name, t->lineno);
+
 				// Semantic Error: Index is not Integer in Array Indexing
-				/*********************Fill the Code*************************
-				 *                                                         *
-				 *                                                         *
-				 *                                                         *
-				 *                                                         *
-				 *                                                         *
-				************************************************************/
+				if (t->child[0]->type != Integer) 
+					ArrayIndexingError(t->name, t->lineno);
+				
 				// Update Node Type
 				t->type = Integer;
 			}
