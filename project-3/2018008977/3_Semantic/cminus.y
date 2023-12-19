@@ -170,7 +170,7 @@ statement			: selection_stmt { $$ = $1; }
 selection_stmt		: IF LPAREN expression RPAREN statement ELSE statement
 						{
 							$$ = newTreeNode(IfStmt);
-							$$->lineno = lineno;
+							$$->lineno = $3->lineno;
 							$$->flag = TRUE;
 							$$->child[0] = $3;
 							$$->child[1] = $5;
@@ -179,7 +179,7 @@ selection_stmt		: IF LPAREN expression RPAREN statement ELSE statement
 					| IF LPAREN expression RPAREN statement 
 						{
 							$$ = newTreeNode(IfStmt);
-							$$->lineno = lineno;
+							$$->lineno = $3->lineno;
 							$$->flag = FALSE;
 							$$->child[0] = $3;
 							$$->child[1] = $5;
